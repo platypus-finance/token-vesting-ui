@@ -1,89 +1,70 @@
-# Token Vesting Dapp
+# Getting Started with Create React App
 
-Web-based GUI to interact with the [Token Vesting contract](https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/token/TokenVesting.sol) provided by the [OpenZeppelin](https://openzeppelin.org) [library](https://github.com/OpenZeppelin/zeppelin-solidity).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-![Token Vesting Dapp](https://github.com/OpenZeppelin/token-vesting-ui/blob/master/example.png)
+## Available Scripts
 
-## Usage
+In the project directory, you can run:
 
-### 1. Clone the repo
-```
-git clone git@github.com:OpenZeppelin/token-vesting-ui.git
-```
+### `yarn start`
 
-### 2. Install the dependencies
-```
-npm install
-```
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-Also make sure you have [Metamask](https://metamask.io/) installed, pointing to the right network and your account is unlocked.
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-### 3. Build the contracts with truffle
-```
-npx truffle compile
-```
-> Note: the `npx` command [comes with npm](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) as of npm@5.2.0 version.
+### `yarn test`
 
-### 4. Start the web server
-```
-npm start
-```
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### 5. (optional) Deploy your own vesting contract
-If you don't have a vesting contract to try this out, deploy your own easily:
+### `yarn build`
 
-#### i. Make sure you are connected to an ethereum node. You can use [testrpc](https://github.com/ethereumjs/testrpc) to simulate one:
-```
-npx testrpc
-```
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-#### ii. Deploy the contracts:
-```
-npx truffle migrate
-```
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-You should get a `TokenVesting` and a `SimpleToken` address:
-```
-Compiling ./contracts/MyVesting.sol...
-Compiling zeppelin-solidity/contracts/examples/SimpleToken.sol...
-Compiling zeppelin-solidity/contracts/math/Math.sol...
-Compiling zeppelin-solidity/contracts/math/SafeMath.sol...
-Compiling zeppelin-solidity/contracts/ownership/Ownable.sol...
-Compiling zeppelin-solidity/contracts/token/BasicToken.sol...
-Compiling zeppelin-solidity/contracts/token/ERC20.sol...
-Compiling zeppelin-solidity/contracts/token/ERC20Basic.sol...
-Compiling zeppelin-solidity/contracts/token/SafeERC20.sol...
-Compiling zeppelin-solidity/contracts/token/StandardToken.sol...
-Compiling zeppelin-solidity/contracts/token/TokenVesting.sol...
-Writing artifacts to ./build/contracts
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-Using network 'development'.
+### `yarn eject`
 
-Running migration: 1_initial_migration.js
-  Deploying Migrations...
-  ... 0x238905c90b586a1e29a510aee9312ec3dbf1276723510191604cdf32837cb755
-  Migrations: 0xd9d268db0a1926847b50f4256be8d9f4ea2140e2
-Saving successful migration to network...
-  ... 0x51161a48ec8d18857ff1abecca4b67c56e5243a4258a3e640f7701bd43bfb7cb
-Saving artifacts...
-Running migration: 2_deploy_contracts.js
-  Deploying TokenVesting...
-  ... 0x100a31e8a48e357ea26b3720c573a56e2bb37a86fbba5953c88206f68f00c590
-  TokenVesting: 0x5c95714bb1e0f0b41548d1437f1fcb07ea1c23f8
-  Deploying SimpleToken...
-  ... 0xe75b5355147e1fe252801d391da3d14368b6343b8313ba4838e4c62330a72184
-  SimpleToken: 0x4500ab575934d13be4a75023508ac602a001d409
-Saving successful migration to network...
-  ... 0x79289cc9b1c8053e7cc9f218bd6edffae057768d85a0a10ad9159334b678fdd6
-Saving artifacts...
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-```
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-These are our addresses:
-```
-TokenVesting: 0x5c95714bb1e0f0b41548d1437f1fcb07ea1c23f8
-SimpleToken: 0x4500ab575934d13be4a75023508ac602a001d409
-```
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-### 6. Ready!
-Go to `http://localhost:3000/<token-vesting-address>/<erc20-token-address>` and interact with the contract!
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `yarn build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
