@@ -21,7 +21,7 @@ const Main = function ({ match }) {
   return web3.utils.isAddress(address) ? (
     <TokenVestingApp
       address={address}
-      /** @todo hardcoded PTP token mainnet address for now */
+      /** @todo remove hardcoded PTP token address. This is a mainnet address*/
       token="0x22d4002028f537599bE9f666d1c4Fa138522f9c8"
     />
   ) : (
