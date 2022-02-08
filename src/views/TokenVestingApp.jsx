@@ -17,7 +17,6 @@ class TokenVestingApp extends Component {
   }
 
   componentDidMount() {
-    console.log(this.getData());
     this.getData();
   }
 

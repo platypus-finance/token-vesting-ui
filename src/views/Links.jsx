@@ -1,7 +1,7 @@
 import React from "react";
 
 function ContractLink({ address }) {
-  const href = `https://etherscan.io/address/${address}`;
+  const href = `https://snowtrace.io/address/${address}`;
   return (
     <a href={href} target="_blank" rel="noreferrer">
       {address}
@@ -10,7 +10,7 @@ function ContractLink({ address }) {
 }
 
 function TokenLink({ address, name }) {
-  const href = `https://etherscan.io/token/${address}`;
+  const href = `https://snowtrace.io/token/${address}`;
   return (
     <a href={href} target="_blank" rel="noreferrer">
       {name}
