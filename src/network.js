@@ -39,10 +39,6 @@ const Network = {
     };
   },
 
-  getExplorerUrl() {
-    return this.provider().then((provider) => provider);
-  },
-
   log(msg) {
     console.log(`[Network] ${msg}`);
   },

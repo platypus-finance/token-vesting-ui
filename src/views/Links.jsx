@@ -5,8 +5,8 @@ function useExplorerUrl() {
   const [explorerUrl, setExplorerUrl] = useState("");
   useEffect(() => {
     const fetchData = async () => {
-      const explorerUrl = await Network.getExplorerUrl();
-      const chainId = explorerUrl.chainId;
+      const provider = await Network.provider();
+      const chainId = provider.chainId;
       switch (chainId) {
         case "0xa86a":
           // AVALANCHE
