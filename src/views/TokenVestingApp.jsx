@@ -1,73 +1,72 @@
-import React, { Component } from 'react'
-import { Grid, Row, Col } from 'react-bootstrap'
+import React, { Component } from "react";
+import { Grid, Row, Col } from "react-bootstrap";
 
-import { getTokenVesting, getSimpleToken } from '../contracts'
+import { getTokenVesting, getSimpleToken } from "../contracts";
 
-import Header from './Header'
-import VestingDetails from './VestingDetails'
-import VestingSchedule from './VestingSchedule'
-import Spinner from './Spinner'
+import Header from "./Header";
+import VestingDetails from "./VestingDetails";
+import VestingSchedule from "./VestingSchedule";
+import Spinner from "./Spinner";
 
-import '../stylesheets/TokenVestingApp.css'
-
+import "../stylesheets/TokenVestingApp.css";
 
 class TokenVestingApp extends Component {
   constructor() {
-    super()
-    this.state = { name: 'Token', loading: true }
+    super();
+    this.state = { name: "Token", loading: true };
   }
 
   componentDidMount() {
-    this.getData()
+    this.getData();
   }
 
   render() {
-    const { address, token } = this.props
+    const { address, token } = this.props;
+
     return (
       <div className="TokenVestingApp">
+        {this.state.loading ? <Spinner /> : null}
 
-        { this.state.loading ? <Spinner /> : null }
-
-        <Header address={ address } token={ token } tokenName={ this.state.name } />
+        <Header address={address} token={token} tokenName={this.state.name} />
 
         <Grid>
           <Row>
             <Col xs={12} md={6}>
               <VestingDetails
-                address={ address }
-                token={ token }
-                details={ this.state }
-                getData={ () => this.getData() }
-                setLoader={ x => this.setLoader(x) }
+                address={address}
+                token={token}
+                details={this.state}
+                getData={() => this.getData()}
+                setLoader={(x) => this.setLoader(x)}
               />
             </Col>
 
             <Col xs={12} md={6}>
-              <VestingSchedule details={ this.state } />
+              <VestingSchedule details={this.state} />
             </Col>
           </Row>
         </Grid>
       </div>
-    )
+    );
   }
 
   setLoader(loading) {
-    this.setState({ loading })
+    this.setState({ loading });
   }
 
   async getData() {
-    const { address, token } = this.props
+    const { address, token } = this.props;
 
-    const tokenVesting = await getTokenVesting(address)
-    const tokenContract = await getSimpleToken(token)
+    const tokenVesting = await getTokenVesting(address);
+    const tokenContract = await getSimpleToken(token);
 
-    const start = await tokenVesting.start()
-    const duration = await tokenVesting.duration()
-    const end = start.plus(duration)
+    const start = await tokenVesting.start();
+    const duration = await tokenVesting.duration();
+    const end = start.plus(duration);
 
-    const balance  = await tokenContract.balanceOf(address)
-    const released = await tokenVesting.released(token)
-    const total = balance.plus(released)
+    const balance = await tokenContract.balanceOf(address);
+    const released = await tokenVesting.released(token);
+    const total = balance.plus(released);
 
     this.setState({
       start,
@@ -83,10 +82,9 @@ class TokenVestingApp extends Component {
       revoked: await tokenVesting.revoked(token),
       name: await tokenContract.name(),
       symbol: await tokenContract.symbol(),
-      loading: false
-    })
+      loading: false,
+    });
   }
 }
 
-
-export default TokenVestingApp
+export default TokenVestingApp;
