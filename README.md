@@ -1,9 +1,3 @@
-# Token Vesting Dapp
-
-Web-based GUI to interact with the [Token Vesting contract](https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/token/TokenVesting.sol) provided by the [OpenZeppelin](https://openzeppelin.org) [library](https://github.com/OpenZeppelin/zeppelin-solidity).
-
-![Token Vesting Dapp](https://github.com/OpenZeppelin/token-vesting-ui/blob/master/example.png)
-
 ## Usage
 
 ### 1. Install the dependencies
@@ -22,4 +16,15 @@ yarn start
 
 ### 3. Ready!
 
-Go to `http://localhost:3000/<token-vesting-address>/<erc20-token-address>` and interact with the contract!
+Default PTP address is mainnet!
+PTP fuji address: 0x1f41318E741d22941ee6bDC859c33463D4BBF211
+
+1. 18 months duration, cliff set to yesterday, 100k ptp vested.
+   [Vesting address](https://testnet.snowtrace.io/address/0x8f94dafF6E653fdDFEC839883AC7763C1589878D):
+   0x8f94dafF6E653fdDFEC839883AC7763C1589878D
+
+2. 18 months duration, cliff set to 9 May 2022, 100k ptp vested.
+   [Vesting address :](https://testnet.snowtrace.io/address/0xDF198C83D5D3310DBd62C3C7a13ff5C08112c1Ad)
+   0xDF198C83D5D3310DBd62C3C7a13ff5C08112c1Ad
+
+Go to `http://localhost:3000/<token-vesting-address>/<token-address-optional>` and interact with the contract!
