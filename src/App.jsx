@@ -21,10 +21,10 @@ const App = () => (
 );
 
 const Main = function ({ match }) {
-  const { account, web3 } = useNetworkContext();
+  const { web3, currentProvider } = useNetworkContext();
   let { address, token } = match.params;
   // TODO validate TokenVesting address
-  return account && web3.utils.isAddress(address) ? (
+  return currentProvider && web3 && web3.utils.isAddress(address) ? (
     <TokenVestingApp
       address={address}
       // the default PTP token address is from mainnet

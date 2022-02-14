@@ -16,10 +16,9 @@ class VestingDetails extends Component {
   async componentWillReceiveProps(nextProps) {
     const { owner, revoked } = nextProps.details;
     const { account } = this.context;
-
     const isOwner = account ? owner === account.toLowerCase() : undefined;
 
-    this.setState({ account, canRevoke: isOwner && !revoked });
+    this.setState({ canRevoke: isOwner && !revoked });
   }
 
   render() {
@@ -113,9 +112,8 @@ class VestingDetails extends Component {
 
   async onRelease() {
     const { token } = this.props;
-    const { account } = this.state;
+    const { account } = this.context;
     const tokenVesting = await this.getTokenVesting();
-
     try {
       this.startLoader();
       await tokenVesting.release(token, { from: account });
@@ -127,7 +125,7 @@ class VestingDetails extends Component {
 
   async onRevoke() {
     const { token } = this.props;
-    const { account } = this.state;
+    const { account } = this.context;
     const tokenVesting = await this.getTokenVesting();
 
     try {

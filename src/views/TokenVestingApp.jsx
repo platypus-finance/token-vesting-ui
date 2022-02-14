@@ -23,6 +23,8 @@ class TokenVestingApp extends Component {
 
   render() {
     const { address, token } = this.props;
+    const { account, switchToAnotherWallet, connectWallet, disconnectWallet } =
+      this.context;
 
     return (
       <div className="TokenVestingApp">
@@ -31,6 +33,19 @@ class TokenVestingApp extends Component {
         <Header address={address} token={token} tokenName={this.state.name} />
 
         <Grid>
+          <Row>
+            <Col style={{ textAlign: "left" }}>
+              {account ? (
+                <>
+                  <h4>My Address: {account}</h4>
+                  <button onClick={switchToAnotherWallet}>Switch Wallet</button>
+                  <button onClick={disconnectWallet}>Disconnect</button>
+                </>
+              ) : (
+                <button onClick={connectWallet}>Connect Your Wallet</button>
+              )}
+            </Col>
+          </Row>
           <Row>
             <Col xs={12} md={6}>
               <VestingDetails

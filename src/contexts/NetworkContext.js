@@ -22,20 +22,26 @@ export const useNetworkContext = () => {
   return useContext(NetworkContext);
 };
 
+const web3Modal = new Web3Modal({
+  cacheProvider: true,
+  providerOptions, // required
+});
+
+/** @todo remove hardcoded fuji */
+const defaultProvider = new Web3.providers.HttpProvider(
+  NETWORKS.FUJI.rpcUrls[0]
+);
+const defaultWeb3 = new Web3(defaultProvider);
+
 function NetworkProvider({ children }) {
   const [currentProvider, setCurrentProvider] = useState(null);
   const [account, setAccount] = useState(null);
   const [web3, setWeb3] = useState(null);
   const [currentNetwork, setCurrentNetwork] = useState(null);
 
-  const connectToWallet = async () => {
+  const connectWallet = async () => {
     try {
-      const web3Modal = new Web3Modal({
-        cacheProvider: true,
-        providerOptions, // required
-      });
       const provider = await web3Modal.connect();
-
       const web3Instance = new Web3(provider);
       const account = await web3Instance.eth.getAccounts();
       setWeb3(web3Instance);
@@ -44,7 +50,7 @@ function NetworkProvider({ children }) {
 
       // set nework
       let chainId = provider.chainId;
-      if (chainId.startsWith("0x")) {
+      if (typeof chainId !== "number" && chainId.startsWith("0x")) {
         chainId = parseInt(chainId, 16);
       }
 
@@ -64,12 +70,42 @@ function NetworkProvider({ children }) {
       console.error(e);
     }
   };
+
+  const switchToAnotherWallet = () => {
+    disconnectWallet();
+    connectWallet();
+  };
+
+  const disconnectWallet = () => {
+    web3Modal.clearCachedProvider();
+    restoreToDefaultNetworkSettings();
+    window.localStorage.removeItem("walletconnect");
+  };
+
+  const restoreToDefaultNetworkSettings = () => {
+    setWeb3(defaultWeb3);
+    setCurrentProvider(defaultWeb3.givenProvider);
+    setCurrentNetwork(NETWORKS.FUJI);
+    setAccount(null);
+  };
   useEffect(() => {
-    connectToWallet();
+    if (web3Modal.cachedProvider) {
+      connectWallet();
+    } else {
+      restoreToDefaultNetworkSettings();
+    }
   }, []);
   return (
     <NetworkContext.Provider
-      value={{ web3, currentProvider, account, currentNetwork }}
+      value={{
+        web3,
+        currentProvider,
+        account,
+        currentNetwork,
+        switchToAnotherWallet,
+        connectWallet,
+        disconnectWallet,
+      }}
     >
       {children}
     </NetworkContext.Provider>
