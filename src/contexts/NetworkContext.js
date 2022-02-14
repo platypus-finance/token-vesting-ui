@@ -31,20 +31,18 @@ function NetworkProvider({ children }) {
   const connectToWallet = async () => {
     try {
       const web3Modal = new Web3Modal({
+        cacheProvider: true,
         providerOptions, // required
       });
       const provider = await web3Modal.connect();
-      // const accounts = await window.ethereum.request({
-      //   method: "eth_requestAccounts",
-      // });
-      // console.log(accounts);
+
       const web3Instance = new Web3(provider);
       const account = await web3Instance.eth.getAccounts();
-
       setWeb3(web3Instance);
       setCurrentProvider(provider);
       setAccount(account[0]);
 
+      // set nework
       let chainId = provider.chainId;
       if (chainId.startsWith("0x")) {
         chainId = parseInt(chainId, 16);
@@ -63,7 +61,7 @@ function NetworkProvider({ children }) {
           setCurrentNetwork(null);
       }
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   useEffect(() => {
