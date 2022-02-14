@@ -4,11 +4,13 @@ import { sleep } from "./utils";
 const Network = {
   async web3() {
     const provider = await Network.provider();
+
     return new Web3(provider);
   },
 
   async eth() {
     const web3 = await Network.web3();
+
     return web3.eth;
   },
 

@@ -9,6 +9,7 @@ import VestingSchedule from "./VestingSchedule";
 import Spinner from "./Spinner";
 
 import "../stylesheets/TokenVestingApp.css";
+import { NetworkContext } from "../contexts/NetworkContext";
 
 class TokenVestingApp extends Component {
   constructor() {
@@ -55,15 +56,13 @@ class TokenVestingApp extends Component {
   }
 
   async getData() {
+    const { currentProvider } = this.context;
     const { address, token } = this.props;
-
-    const tokenVesting = await getTokenVesting(address);
-    const tokenContract = await getSimpleToken(token);
-
+    const tokenVesting = await getTokenVesting(address, currentProvider);
+    const tokenContract = await getSimpleToken(token, currentProvider);
     const start = await tokenVesting.start();
     const duration = await tokenVesting.duration();
     const end = start.plus(duration);
-
     const balance = await tokenContract.balanceOf(address);
     const released = await tokenVesting.released(token);
     const total = balance.plus(released);
@@ -87,4 +86,5 @@ class TokenVestingApp extends Component {
   }
 }
 
+TokenVestingApp.contextType = NetworkContext;
 export default TokenVestingApp;

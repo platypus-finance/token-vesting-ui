@@ -1,13 +1,11 @@
+import moment from "moment";
 import React, { Component } from "react";
 import { Table } from "react-bootstrap";
-import moment from "moment";
-
+import { NetworkContext } from "../contexts/NetworkContext";
 import { getTokenVesting } from "../contracts";
 import { displayAmount } from "../utils";
-import Network from "../network";
-
-import { ContractLink } from "./Links";
 import Emoji from "./Emoji";
+import { ContractLink } from "./Links";
 
 class VestingDetails extends Component {
   constructor() {
@@ -17,13 +15,11 @@ class VestingDetails extends Component {
 
   async componentWillReceiveProps(nextProps) {
     const { owner, revoked } = nextProps.details;
-    const accounts = await Network.getAccounts();
+    const { account } = this.context;
 
-    const isOwner = accounts[0]
-      ? owner === accounts[0].toLowerCase()
-      : undefined;
+    const isOwner = account ? owner === account.toLowerCase() : undefined;
 
-    this.setState({ accounts, canRevoke: isOwner && !revoked });
+    this.setState({ account, canRevoke: isOwner && !revoked });
   }
 
   render() {
@@ -111,17 +107,18 @@ class VestingDetails extends Component {
   }
 
   async getTokenVesting() {
-    return getTokenVesting(this.props.address);
+    const { currentProvider } = this.context;
+    return getTokenVesting(this.props.address, currentProvider);
   }
 
   async onRelease() {
     const { token } = this.props;
-    const { accounts } = this.state;
+    const { account } = this.state;
     const tokenVesting = await this.getTokenVesting();
 
     try {
       this.startLoader();
-      await tokenVesting.release(token, { from: accounts[0] });
+      await tokenVesting.release(token, { from: account });
       this.props.getData();
     } catch (e) {
       this.stopLoader();
@@ -130,12 +127,12 @@ class VestingDetails extends Component {
 
   async onRevoke() {
     const { token } = this.props;
-    const { accounts } = this.state;
+    const { account } = this.state;
     const tokenVesting = await this.getTokenVesting();
 
     try {
       this.startLoader();
-      await tokenVesting.revoke(token, { from: accounts[0] });
+      await tokenVesting.revoke(token, { from: account });
       this.props.getData();
     } catch (e) {
       this.stopLoader();
@@ -179,5 +176,7 @@ function Releasable({ releasable, onRelease, children }) {
     </span>
   );
 }
+
+VestingDetails.contextType = NetworkContext;
 
 export default VestingDetails;
