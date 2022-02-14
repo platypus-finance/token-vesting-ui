@@ -77,10 +77,10 @@ class TokenVestingApp extends Component {
     const tokenContract = await getSimpleToken(token, currentProvider);
     const start = await tokenVesting.start();
     const duration = await tokenVesting.duration();
-    const end = start.plus(duration);
+    const end = start.add(duration);
     const balance = await tokenContract.balanceOf(address);
     const released = await tokenVesting.released(token);
-    const total = balance.plus(released);
+    const total = balance.add(released);
 
     this.setState({
       start,

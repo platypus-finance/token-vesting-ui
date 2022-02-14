@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-
-import Web3Modal from "web3modal";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import Web3 from "web3";
+import Web3Modal from "web3modal";
 import { NETWORKS } from "../configs/networks";
+
 const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider, // required
@@ -27,18 +27,12 @@ const web3Modal = new Web3Modal({
   providerOptions, // required
 });
 
-/** @todo remove hardcoded fuji */
-const defaultProvider = new Web3.providers.HttpProvider(
-  NETWORKS.FUJI.rpcUrls[0]
-);
-const defaultWeb3 = new Web3(defaultProvider);
-
 function NetworkProvider({ children }) {
   const [currentProvider, setCurrentProvider] = useState(null);
   const [account, setAccount] = useState(null);
   const [web3, setWeb3] = useState(null);
   const [currentNetwork, setCurrentNetwork] = useState(null);
-
+  const [isFujiRequired, setIsFujiRequired] = useState(false);
   const connectWallet = async () => {
     try {
       const provider = await web3Modal.connect();
@@ -71,6 +65,20 @@ function NetworkProvider({ children }) {
     }
   };
 
+  // const defaultProvider = new Web3.providers.HttpProvider(
+  //   "https://speedy-nodes-nyc.moralis.io/86f0c57308532f29b1a22f4d/avalanche/testnet"
+  // );
+  // const defaultWeb3 = new Web3(defaultProvider);
+
+  // const defaultWeb3 = useMemo(() => {
+  //   const defaultProvider = new Web3.providers.HttpProvider(
+  //     isFujiRequired
+  //       ? "https://speedy-nodes-nyc.moralis.io/86f0c57308532f29b1a22f4d/avalanche/testnet"
+  //       : "https://speedy-nodes-nyc.moralis.io/86f0c57308532f29b1a22f4d/avalanche/mainnet"
+  //   );
+  //   return new Web3(defaultProvider);
+  // }, [isFujiRequired]);
+
   const switchToAnotherWallet = () => {
     disconnectWallet();
     connectWallet();
@@ -78,23 +86,43 @@ function NetworkProvider({ children }) {
 
   const disconnectWallet = () => {
     web3Modal.clearCachedProvider();
-    restoreToDefaultNetworkSettings();
+    restoreToDefaultNetworkSettings(isFujiRequired);
     window.localStorage.removeItem("walletconnect");
   };
 
-  const restoreToDefaultNetworkSettings = () => {
+  const restoreToDefaultNetworkSettings = (isFuji) => {
+    const defaultProvider = new Web3.providers.HttpProvider(
+      isFuji
+        ? "https://speedy-nodes-nyc.moralis.io/86f0c57308532f29b1a22f4d/avalanche/testnet"
+        : "https://speedy-nodes-nyc.moralis.io/86f0c57308532f29b1a22f4d/avalanche/mainnet"
+    );
+    const defaultWeb3 = new Web3(defaultProvider);
     setWeb3(defaultWeb3);
-    setCurrentProvider(defaultWeb3.givenProvider);
-    setCurrentNetwork(NETWORKS.FUJI);
+    setCurrentProvider(defaultProvider);
+    setCurrentNetwork(isFuji ? NETWORKS.FUJI : NETWORKS.AVALANCHE);
     setAccount(null);
   };
+
   useEffect(() => {
-    if (web3Modal.cachedProvider) {
-      connectWallet();
-    } else {
-      restoreToDefaultNetworkSettings();
-    }
-  }, []);
+    if (
+      !currentProvider ||
+      !currentProvider.on ||
+      !currentProvider.removeListener
+    )
+      return;
+    const updateAccount = (accounts) => {
+      if (accounts.length > 0) {
+        setAccount(accounts[0]);
+      } else {
+        setAccount(null);
+      }
+    };
+    currentProvider.on("accountsChanged", updateAccount);
+    return () => {
+      currentProvider.removeListener("accountsChanged", updateAccount);
+    };
+  }, [currentProvider]);
+
   return (
     <NetworkContext.Provider
       value={{
@@ -105,6 +133,9 @@ function NetworkProvider({ children }) {
         switchToAnotherWallet,
         connectWallet,
         disconnectWallet,
+        setIsFujiRequired,
+        web3Modal,
+        restoreToDefaultNetworkSettings,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NetworkProvider, { useNetworkContext } from "./contexts/NetworkContext";
 import TokenVestingApp from "./views/TokenVestingApp";
@@ -21,8 +21,31 @@ const App = () => (
 );
 
 const Main = function ({ match }) {
-  const { web3, currentProvider } = useNetworkContext();
+  const {
+    web3,
+    currentProvider,
+    setIsFujiRequired,
+    web3Modal,
+    restoreToDefaultNetworkSettings,
+    connectWallet,
+  } = useNetworkContext();
   let { address, token } = match.params;
+
+  useEffect(() => {
+    // not allow users to close the modal without connecting
+    // const ele = document.querySelector(".web3modal-modal-container");
+    // ele.style.pointerEvents = "none";
+    // if token is obtained, it requires FUJI
+    const isFuji = !!token;
+    setIsFujiRequired(isFuji);
+    if (web3Modal.cachedProvider) {
+      connectWallet();
+    } else {
+      restoreToDefaultNetworkSettings(isFuji);
+    }
+    // only run on start
+    // eslint-disable-next-line
+  }, []);
   // TODO validate TokenVesting address
   return currentProvider && web3 && web3.utils.isAddress(address) ? (
     <TokenVestingApp
