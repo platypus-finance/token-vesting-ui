@@ -77,12 +77,12 @@ function NetworkProvider({ children }) {
   };
 
   const disconnectWallet = () => {
-    web3Modal.clearCachedProvider();
     restoreToDefaultNetworkSettings(isFujiRequired);
-    window.localStorage.removeItem("walletconnect");
   };
 
   const restoreToDefaultNetworkSettings = (isFuji) => {
+    web3Modal.clearCachedProvider();
+    window.localStorage.removeItem("walletconnect");
     defaultProvider.host = isFuji
       ? NETWORKS.FUJI.rpcUrls[0]
       : NETWORKS.AVALANCHE.rpcUrls[0];
