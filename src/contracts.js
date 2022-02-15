@@ -1,4 +1,4 @@
-import contract from "@truffle/contract";
+import contract from "truffle-contract";
 
 export async function getTokenVesting(address, provider) {
   const TokenVesting = contract(require("./contracts/TokenVesting.json"));

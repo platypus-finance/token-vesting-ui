@@ -27,12 +27,18 @@ const web3Modal = new Web3Modal({
   providerOptions, // required
 });
 
+// requires sendAsync to solve "Cannot read properties of undefined (reading 'apply')"
+Web3.providers.HttpProvider.prototype.sendAsync =
+  Web3.providers.HttpProvider.prototype.send;
+const defaultProvider = new Web3.providers.HttpProvider();
+const defaultWeb3 = new Web3();
 function NetworkProvider({ children }) {
   const [currentProvider, setCurrentProvider] = useState(null);
   const [account, setAccount] = useState(null);
   const [web3, setWeb3] = useState(null);
   const [currentNetwork, setCurrentNetwork] = useState(null);
   const [isFujiRequired, setIsFujiRequired] = useState(false);
+
   const connectWallet = async () => {
     try {
       const provider = await web3Modal.connect();
@@ -60,24 +66,10 @@ function NetworkProvider({ children }) {
         default:
           setCurrentNetwork(null);
       }
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
     }
   };
-
-  // const defaultProvider = new Web3.providers.HttpProvider(
-  //   "https://speedy-nodes-nyc.moralis.io/86f0c57308532f29b1a22f4d/avalanche/testnet"
-  // );
-  // const defaultWeb3 = new Web3(defaultProvider);
-
-  // const defaultWeb3 = useMemo(() => {
-  //   const defaultProvider = new Web3.providers.HttpProvider(
-  //     isFujiRequired
-  //       ? "https://speedy-nodes-nyc.moralis.io/86f0c57308532f29b1a22f4d/avalanche/testnet"
-  //       : "https://speedy-nodes-nyc.moralis.io/86f0c57308532f29b1a22f4d/avalanche/mainnet"
-  //   );
-  //   return new Web3(defaultProvider);
-  // }, [isFujiRequired]);
 
   const switchToAnotherWallet = () => {
     disconnectWallet();
@@ -91,12 +83,10 @@ function NetworkProvider({ children }) {
   };
 
   const restoreToDefaultNetworkSettings = (isFuji) => {
-    const defaultProvider = new Web3.providers.HttpProvider(
-      isFuji
-        ? "https://speedy-nodes-nyc.moralis.io/86f0c57308532f29b1a22f4d/avalanche/testnet"
-        : "https://speedy-nodes-nyc.moralis.io/86f0c57308532f29b1a22f4d/avalanche/mainnet"
-    );
-    const defaultWeb3 = new Web3(defaultProvider);
+    defaultProvider.host = isFuji
+      ? NETWORKS.FUJI.rpcUrls[0]
+      : NETWORKS.AVALANCHE.rpcUrls[0];
+    defaultWeb3.setProvider(defaultProvider);
     setWeb3(defaultWeb3);
     setCurrentProvider(defaultProvider);
     setCurrentNetwork(isFuji ? NETWORKS.FUJI : NETWORKS.AVALANCHE);
@@ -117,7 +107,9 @@ function NetworkProvider({ children }) {
         setAccount(null);
       }
     };
+
     currentProvider.on("accountsChanged", updateAccount);
+
     return () => {
       currentProvider.removeListener("accountsChanged", updateAccount);
     };

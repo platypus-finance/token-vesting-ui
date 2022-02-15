@@ -113,8 +113,8 @@ class VestingDetails extends Component {
   async onRelease() {
     const { token } = this.props;
     const { account } = this.context;
-    const tokenVesting = await this.getTokenVesting();
     try {
+      const tokenVesting = await this.getTokenVesting();
       this.startLoader();
       await tokenVesting.release(token, { from: account });
       this.props.getData();
@@ -126,9 +126,8 @@ class VestingDetails extends Component {
   async onRevoke() {
     const { token } = this.props;
     const { account } = this.context;
-    const tokenVesting = await this.getTokenVesting();
-
     try {
+      const tokenVesting = await this.getTokenVesting();
       this.startLoader();
       await tokenVesting.revoke(token, { from: account });
       this.props.getData();

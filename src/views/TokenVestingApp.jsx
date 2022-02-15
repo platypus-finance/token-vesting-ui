@@ -73,31 +73,38 @@ class TokenVestingApp extends Component {
   async getData() {
     const { currentProvider } = this.context;
     const { address, token } = this.props;
-    const tokenVesting = await getTokenVesting(address, currentProvider);
-    const tokenContract = await getSimpleToken(token, currentProvider);
-    const start = await tokenVesting.start();
-    const duration = await tokenVesting.duration();
-    const end = start.add(duration);
-    const balance = await tokenContract.balanceOf(address);
-    const released = await tokenVesting.released(token);
-    const total = balance.add(released);
+    try {
+      const tokenVesting = await getTokenVesting(address, currentProvider);
+      const tokenContract = await getSimpleToken(token, currentProvider);
 
-    this.setState({
-      start,
-      end,
-      cliff: await tokenVesting.cliff(),
-      total,
-      released,
-      vested: await tokenVesting.vestedAmount(token),
-      decimals: await tokenContract.decimals(),
-      beneficiary: await tokenVesting.beneficiary(),
-      owner: await tokenVesting.owner(),
-      revocable: await tokenVesting.revocable(),
-      revoked: await tokenVesting.revoked(token),
-      name: await tokenContract.name(),
-      symbol: await tokenContract.symbol(),
-      loading: false,
-    });
+      const start = await tokenVesting.start();
+      const duration = await tokenVesting.duration();
+      const end = start.add(duration);
+      const balance = await tokenContract.balanceOf(address);
+      const released = await tokenVesting.released(token);
+      const total = balance.add(released);
+
+      this.setState({
+        start,
+        end,
+        cliff: await tokenVesting.cliff(),
+        total,
+        released,
+        vested: await tokenVesting.vestedAmount(token),
+        decimals: await tokenContract.decimals(),
+        beneficiary: await tokenVesting.beneficiary(),
+        owner: await tokenVesting.owner(),
+        revocable: await tokenVesting.revocable(),
+        revoked: await tokenVesting.revoked(token),
+        name: await tokenContract.name(),
+        symbol: await tokenContract.symbol(),
+        loading: false,
+      });
+    } catch (err) {
+      // if the message is "Cannot create instance of TokenVesting; no code at address",
+      // it means it is in the wrong network.
+      console.error(err);
+    }
   }
 }
 
