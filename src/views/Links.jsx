@@ -1,33 +1,10 @@
-import React, { useEffect, useState } from "react";
-import Network from "../network";
-
-function useExplorerUrl() {
-  const [explorerUrl, setExplorerUrl] = useState("");
-  useEffect(() => {
-    const fetchData = async () => {
-      const provider = await Network.provider();
-      const chainId = provider.chainId;
-      switch (chainId) {
-        case "0xa86a":
-          // AVALANCHE
-          setExplorerUrl("https://snowtrace.io/");
-          break;
-        case "0xa869":
-          // FUJI
-          setExplorerUrl("https://testnet.snowtrace.io/");
-          break;
-        default:
-      }
-    };
-    fetchData();
-  }, []);
-
-  return { explorerUrl };
-}
+import React from "react";
+import { useNetworkContext } from "../contexts/NetworkContext";
 
 function ContractLink({ address }) {
-  const { explorerUrl } = useExplorerUrl();
-  const href = `${explorerUrl}address/${address}`;
+  const { currentNetwork } = useNetworkContext();
+  const href = `${currentNetwork?.blockExplorerUrls[0]}address/${address}`;
+
   return (
     <a href={href} target="_blank" rel="noreferrer">
       {address}
@@ -36,8 +13,9 @@ function ContractLink({ address }) {
 }
 
 function TokenLink({ address, name }) {
-  const { explorerUrl } = useExplorerUrl();
-  const href = `${explorerUrl}/token/${address}`;
+  const { currentNetwork } = useNetworkContext();
+  const href = `${currentNetwork?.blockExplorerUrls[0]}token/${address}`;
+
   return (
     <a href={href} target="_blank" rel="noreferrer">
       {name}

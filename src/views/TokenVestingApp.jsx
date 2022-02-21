@@ -9,6 +9,7 @@ import VestingSchedule from "./VestingSchedule";
 import Spinner from "./Spinner";
 
 import "../stylesheets/TokenVestingApp.css";
+import { NetworkContext } from "../contexts/NetworkContext";
 
 class TokenVestingApp extends Component {
   constructor() {
@@ -22,6 +23,8 @@ class TokenVestingApp extends Component {
 
   render() {
     const { address, token } = this.props;
+    const { account, switchToAnotherWallet, connectWallet, disconnectWallet } =
+      this.context;
 
     return (
       <div className="TokenVestingApp">
@@ -30,6 +33,19 @@ class TokenVestingApp extends Component {
         <Header address={address} token={token} tokenName={this.state.name} />
 
         <Grid>
+          <Row>
+            <Col style={{ textAlign: "left" }}>
+              {account ? (
+                <>
+                  <h4>My Address: {account}</h4>
+                  <button onClick={switchToAnotherWallet}>Switch Wallet</button>
+                  <button onClick={disconnectWallet}>Disconnect</button>
+                </>
+              ) : (
+                <button onClick={connectWallet}>Connect Your Wallet</button>
+              )}
+            </Col>
+          </Row>
           <Row>
             <Col xs={12} md={6}>
               <VestingDetails
@@ -55,36 +71,42 @@ class TokenVestingApp extends Component {
   }
 
   async getData() {
+    const { currentProvider } = this.context;
     const { address, token } = this.props;
+    try {
+      const tokenVesting = await getTokenVesting(address, currentProvider);
+      const tokenContract = await getSimpleToken(token, currentProvider);
 
-    const tokenVesting = await getTokenVesting(address);
-    const tokenContract = await getSimpleToken(token);
+      const start = await tokenVesting.start();
+      const duration = await tokenVesting.duration();
+      const end = start.add(duration);
+      const balance = await tokenContract.balanceOf(address);
+      const released = await tokenVesting.released(token);
+      const total = balance.add(released);
 
-    const start = await tokenVesting.start();
-    const duration = await tokenVesting.duration();
-    const end = start.plus(duration);
-
-    const balance = await tokenContract.balanceOf(address);
-    const released = await tokenVesting.released(token);
-    const total = balance.plus(released);
-
-    this.setState({
-      start,
-      end,
-      cliff: await tokenVesting.cliff(),
-      total,
-      released,
-      vested: await tokenVesting.vestedAmount(token),
-      decimals: await tokenContract.decimals(),
-      beneficiary: await tokenVesting.beneficiary(),
-      owner: await tokenVesting.owner(),
-      revocable: await tokenVesting.revocable(),
-      revoked: await tokenVesting.revoked(token),
-      name: await tokenContract.name(),
-      symbol: await tokenContract.symbol(),
-      loading: false,
-    });
+      this.setState({
+        start,
+        end,
+        cliff: await tokenVesting.cliff(),
+        total,
+        released,
+        vested: await tokenVesting.vestedAmount(token),
+        decimals: await tokenContract.decimals(),
+        beneficiary: await tokenVesting.beneficiary(),
+        owner: await tokenVesting.owner(),
+        revocable: await tokenVesting.revocable(),
+        revoked: await tokenVesting.revoked(token),
+        name: await tokenContract.name(),
+        symbol: await tokenContract.symbol(),
+        loading: false,
+      });
+    } catch (err) {
+      // if the message is "Cannot create instance of TokenVesting; no code at address",
+      // it means it is in the wrong network.
+      console.error(err);
+    }
   }
 }
 
+TokenVestingApp.contextType = NetworkContext;
 export default TokenVestingApp;

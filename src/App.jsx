@@ -1,24 +1,45 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Web3 from "web3";
-
+import NetworkProvider, { useNetworkContext } from "./contexts/NetworkContext";
 import TokenVestingApp from "./views/TokenVestingApp";
 
 const App = () => (
-  <Router>
-    <Switch>
-      <Route path="/:address/:token?" component={Main} />
-      <Route component={MissingAddress} />
-    </Switch>
-  </Router>
+  <NetworkProvider>
+    <Router>
+      <Switch>
+        <Route path="/:address/:token?" component={Main} />
+        <Route component={MissingAddress} />
+      </Switch>
+    </Router>
+  </NetworkProvider>
 );
 
 const Main = function ({ match }) {
-  let web3 = new Web3();
+  const {
+    web3,
+    currentProvider,
+    setIsFujiRequired,
+    web3Modal,
+    restoreToDefaultNetworkSettings,
+    connectWallet,
+  } = useNetworkContext();
   let { address, token } = match.params;
-  // TODO validate TokenVesting address
-  return web3.utils.isAddress(address) ? (
+  useEffect(() => {
+    // if token is obtained, it requires FUJI
+    const isFuji = !!token;
+    setIsFujiRequired(isFuji);
+    if (web3Modal.cachedProvider) {
+      connectWallet();
+    } else {
+      restoreToDefaultNetworkSettings(isFuji);
+    }
+    // only run on start
+    // eslint-disable-next-line
+  }, []);
+
+  return currentProvider && web3 && web3.utils.isAddress(address) ? (
     <TokenVestingApp
+      currentProvider={currentProvider}
       address={address}
       // the default PTP token address is from mainnet
       token={token || "0x22d4002028f537599bE9f666d1c4Fa138522f9c8"}
