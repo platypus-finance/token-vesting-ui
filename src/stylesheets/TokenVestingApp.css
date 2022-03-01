@@ -1,16 +1,21 @@
 .TokenVestingApp {
-  background-color: #fafbfc;
   text-align: center;
 }
 
 .header {
   margin-bottom: 30px;
   padding: 20px;
-  background-color: white;
+  background: #00194c;
 
   text-align: left;
   color: black;
-  border-bottom: 1px solid #ecf0f2;
+  border-bottom: 1px solid
+    linear-gradient(
+      90deg,
+      rgba(12, 88, 255, 0.5) 0%,
+      #0076e9 48.29%,
+      rgba(12, 88, 255, 0.5) 97.25%
+    );
 }
 
 .logo {
@@ -18,7 +23,6 @@
   left: -27px;
   height: 50px;
   padding-right: 12px;
-  border-right: 1px solid #5cb6e4;
 }
 
 .contracts {
@@ -33,12 +37,12 @@
 }
 
 .contracts a {
-  color: #004569;
+  color: #fff;
 }
 
 .contracts span {
-  color: #333;
   font-size: 11px;
+  color: #fff;
 }
 
 .details a {
@@ -64,8 +68,11 @@
   right: 30px;
   background: unset;
   border: none;
-  color: #337ab7;
+  color: #fff;
   text-decoration: none;
+}
+.action:hover {
+  opacity: 0.8;
 }
 
 .spinner {
@@ -88,4 +95,51 @@
 
 th {
   min-width: 155px;
+}
+
+.wallet-button {
+  background: #040c1585;
+  border-radius: 100px;
+  padding: 8px 12px;
+  outline: none;
+  border: 1px solid #fff;
+  margin-right: 12px;
+  margin-top: 4px;
+}
+
+.wallet-button:hover {
+  opacity: 0.8;
+}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  background: rgba(0, 80, 255, 0.2);
+
+  border-top: unset;
+}
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th {
+  border-radius: 8px 0px 0px 8px;
+}
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+  border-radius: 0px 8px 8px 0px;
+}
+
+.col-spacer {
+  padding: 0 2px !important;
+  background: unset !important;
+  border: unset;
+  border-radius: unset !important;
+}
+.row-spacer {
+  height: 5px !important;
+  background: unset !important;
+  border: unset;
+  border-radius: unset !important;
 }

@@ -37,8 +37,8 @@ class VestingDetails extends Component {
     return (
       <div className="details">
         <h4>Vesting details</h4>
-        <Table striped bordered condensed>
-          <tbody>
+        <Table condensed>
+          <tbody classNAme="table-body">
             <TableRow title="Beneficiary">
               <ContractLink address={beneficiary} />
             </TableRow>
@@ -139,10 +139,14 @@ class VestingDetails extends Component {
 
 function TableRow({ title, children }) {
   return (
-    <tr>
-      <th>{title}</th>
-      <td>{children}</td>
-    </tr>
+    <>
+      <tr>
+        <th>{title}</th>
+        <td className="col-spacer"></td>
+        <td>{children}</td>
+      </tr>
+      <tr className="row-spacer"></tr>
+    </>
   );
 }
 

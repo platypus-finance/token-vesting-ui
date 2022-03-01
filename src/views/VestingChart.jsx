@@ -68,10 +68,19 @@ class VestingChart extends Component {
 
   chartOptions() {
     return {
+      tooltips: {
+        titleFontFamily: "Lato",
+        xPadding: 16,
+        yPadding: 16,
+        titleMarginBottom: 12,
+      },
       legend: { display: false },
       scales: {
         xAxes: [
           {
+            ticks: {
+              fontColor: "#fff",
+            },
             type: "time",
             time: {
               format: "MM/DD/YYYY HH:mm",
@@ -80,14 +89,31 @@ class VestingChart extends Component {
             scaleLabel: {
               display: true,
               labelString: "Date",
+              fontColor: "#fff",
+              fontFamily: "Lato",
+            },
+            gridLines: {
+              color: "#fff",
+              zeroLineColor: "#00A7FF",
             },
           },
         ],
         yAxes: [
           {
+            ticks: {
+              fontColor: "#fff",
+              callback: function (value) {
+                return value.toLocaleString("en-US");
+              },
+            },
             scaleLabel: {
               display: true,
               labelString: this.props.details.symbol || "",
+              fontColor: "#fff",
+              fontFamily: "Lato",
+            },
+            gridLines: {
+              color: "#fff",
             },
           },
         ],
@@ -98,18 +124,18 @@ class VestingChart extends Component {
   fromBaseDataset(opts) {
     return {
       lineTension: 0.1,
-      backgroundColor: "rgba(92,182,228,0.4)",
-      borderColor: "rgba(92,182,228,1)",
+      backgroundColor: "#f2c84c7d",
+      borderColor: "#F2C94C",
       borderJoinStyle: "miter",
-      pointBorderColor: "rgba(92,182,228,1)",
-      pointBackgroundColor: "rgba(92,182,228,1)",
+      pointBackgroundColor: "#F2C94C",
       pointBorderWidth: 1,
       pointHoverRadius: 5,
-      pointHoverBackgroundColor: "rgba(92,182,228,1)",
       pointHoverBorderColor: "rgba(220,220,220,1)",
       pointHoverBorderWidth: 2,
-      pointRadius: 5,
+      pointRadius: 4,
       pointHitRadius: 10,
+      color: "#fff",
+
       ...opts,
     };
   }
