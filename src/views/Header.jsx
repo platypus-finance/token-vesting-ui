@@ -9,7 +9,7 @@ function Header({ address, token, tokenName }) {
         <Col xs={12}>
           <a
             target="_blank"
-            href="https://openzeppelin.org"
+            href="https://platypus.finance/"
             rel="noopener noreferrer"
           >
             <img
