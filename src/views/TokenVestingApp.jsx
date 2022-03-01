@@ -38,11 +38,20 @@ class TokenVestingApp extends Component {
               {account ? (
                 <>
                   <h4>My Address: {account}</h4>
-                  <button onClick={switchToAnotherWallet}>Switch Wallet</button>
-                  <button onClick={disconnectWallet}>Disconnect</button>
+                  <button
+                    className="wallet-button"
+                    onClick={switchToAnotherWallet}
+                  >
+                    Switch Wallet
+                  </button>
+                  <button className="wallet-button" onClick={disconnectWallet}>
+                    Disconnect
+                  </button>
                 </>
               ) : (
-                <button onClick={connectWallet}>Connect Your Wallet</button>
+                <button className="wallet-button" onClick={connectWallet}>
+                  Connect Your Wallet
+                </button>
               )}
             </Col>
           </Row>
