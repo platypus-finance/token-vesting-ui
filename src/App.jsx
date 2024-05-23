@@ -15,12 +15,19 @@ const App = () => (
 );
 
 const Main = function ({ match }) {
-  const { web3, currentProvider, web3Modal, connectWallet } =
-    useNetworkContext();
+  const {
+    web3,
+    currentProvider,
+    web3Modal,
+    connectWallet,
+    restoreToDefaultNetworkSettings,
+  } = useNetworkContext();
   let { address, token } = match.params;
   useEffect(() => {
     if (web3Modal.cachedProvider) {
       connectWallet();
+    } else {
+      restoreToDefaultNetworkSettings(false);
     }
     // only run on start
     // eslint-disable-next-line
