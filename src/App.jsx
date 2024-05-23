@@ -15,23 +15,12 @@ const App = () => (
 );
 
 const Main = function ({ match }) {
-  const {
-    web3,
-    currentProvider,
-    setIsFujiRequired,
-    web3Modal,
-    restoreToDefaultNetworkSettings,
-    connectWallet,
-  } = useNetworkContext();
+  const { web3, currentProvider, web3Modal, connectWallet } =
+    useNetworkContext();
   let { address, token } = match.params;
   useEffect(() => {
-    // if token is obtained, it requires FUJI
-    const isFuji = !!token;
-    setIsFujiRequired(isFuji);
     if (web3Modal.cachedProvider) {
       connectWallet();
-    } else {
-      restoreToDefaultNetworkSettings(isFuji);
     }
     // only run on start
     // eslint-disable-next-line
